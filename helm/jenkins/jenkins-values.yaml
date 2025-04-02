@@ -1,0 +1,18 @@
+controller:
+  enable: true
+  replicas: 2  # HA Mode
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClassName: "local-path"
+
+  database:
+    type: "postgres"
+    url: "jdbc:postgresql://postgresql.postgresql.svc.cluster.local:5432/database"
+    user: "postgres"
+    password: "superSecretPass"
+    database: "postgres-db"
+
+  service:
+    type: ClusterIP
+

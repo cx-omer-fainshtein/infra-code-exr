@@ -1,0 +1,18 @@
+global:
+  postgresql:
+    auth:
+      existingSecret: "postgres-secret"
+      secretKeys:
+        userKey: "postgres-user"
+        passwordKey: "postgres-password"
+        databaseKey: "postgres-db"
+
+primary:
+  persistence:
+    enabled: true
+    size: 5Gi
+    storageClass: "local-path"
+
+service:
+  type: ClusterIP
+

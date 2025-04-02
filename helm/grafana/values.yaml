@@ -1,0 +1,11 @@
+adminUser: "admin"
+adminPassword: "adminpassword"
+
+persistence:
+  enabled: true
+  storageClassName: "local-path"
+  size: 2Gi
+
+service:
+  type: ClusterIP
+
