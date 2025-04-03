@@ -33,11 +33,11 @@ spec:
           echo "📖 Reading DB credentials...";
           DB_PASS=$(cat /mnt/secrets/postgres-password)
           echo "db pass from mnt: $DB_PASS"
-          DB_NAME=postgres
+          DB_NAME=postgres-db
           DB_HOST="postgresql.postgresql.svc.cluster.local"
 
           echo "⏳ Updating timestamp in PostgreSQL...";
-          PGPASSWORD="supersecretpassword" psql -h "$DB_HOST" -U postgres -d "$DB_NAME" -c "INSERT INTO timestamps (updated_at) VALUES (NOW());"
+          PGPASSWORD="superSecret" psql -h "$DB_HOST" -U postgres -d "$DB_NAME" -c "INSERT INTO timestamps (updated_at) VALUES (NOW());"
 
           echo "✅ Timestamp updated!"
           exit 0
