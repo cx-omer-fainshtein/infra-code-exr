@@ -37,7 +37,7 @@ spec:
           DB_HOST="postgresql.postgresql.svc.cluster.local"
 
           echo "⏳ Updating timestamp in PostgreSQL...";
-          PGPASSWORD="superSecret" psql -h "$DB_HOST" -U postgres -d "$DB_NAME" -c "INSERT INTO timestamps (updated_at) VALUES (NOW());"
+          PGPASSWORD="N2lImnx6rt" psql -h "$DB_HOST" -U postgres -d "$DB_NAME" -c "INSERT INTO timestamps (updated_at) VALUES (NOW());"
 
           echo "✅ Timestamp updated!"
           exit 0
