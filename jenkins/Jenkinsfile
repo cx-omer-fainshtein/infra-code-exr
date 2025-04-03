@@ -33,7 +33,7 @@ spec:
           echo "📖 Reading DB credentials...";
           DB_PASS=$(cat /mnt/secrets/postgres-password)
           echo "db pass from mnt: $DB_PASS"
-          DB_NAME=postgres-db
+          DB_NAME=postgres
           DB_HOST="postgresql.postgresql.svc.cluster.local"
 
           echo "⏳ Updating timestamp in PostgreSQL...";
