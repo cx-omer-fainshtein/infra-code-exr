@@ -47,10 +47,6 @@ spec:
 
           echo "✅ Timestamp updated!"
           exit 0
-      volumeMounts:
-        - name: postgres-secret
-          mountPath: /mnt/secrets
-          readOnly: true
 '''
                 }
             }
