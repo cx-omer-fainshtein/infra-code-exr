@@ -19,7 +19,7 @@ spec:
   volumes:
     - name: postgres-secret-volume
       secret:
-        secretName: postgres-secret
+        secretName: jenkins
   containers:
     - name: worker
       image: postgres:latest  # Use the latest version
