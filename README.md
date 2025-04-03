@@ -41,4 +41,3 @@ To remove the deployment and delete the k3d cluster, run:
 - jenkins DSL job login to postgres db hard coded 
 - jenkins ovveride grfana and vice versa - only one service can be expose at the time
 - terraform setup isn't completed
-- 
