@@ -51,9 +51,6 @@ case "$1" in
       echo "Helm is already installed"
     fi
 
-    echo "Cloning the repository..."
-    git clone $REPO_URL
-
     # Step 2: Create k3d cluster
     echo "Creating k3d cluster..."
     k3d cluster create --api-port 6550 -p "8081:80@loadbalancer" --agents 2
