@@ -17,7 +17,7 @@ metadata:
 spec:
   restartPolicy: Never
   volumes:
-    - name: postgres-secret-volume
+    - name: postgres-secret
       secret:
         secretName: postgres-secret
   containers:
