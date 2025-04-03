@@ -9,12 +9,11 @@ pipeline {
                 kubernetes {
                     inheritFrom 'worker-pod'
                     defaultContainer 'worker'
-                    yaml """
+                    yaml '''
 apiVersion: v1
 kind: Pod
 metadata:
-  generateName: timestamp-creation-job-
-  namespace: default
+  name: timestamp-creation-job
 spec:
   restartPolicy: Never
   volumes:
@@ -32,16 +31,13 @@ spec:
           ls -l /mnt/secrets/  # Debugging: Print secret contents
 
           echo "📖 Reading DB credentials...";
-          DB_PASS=\$(cat /mnt/secrets/postgres-password)
-          echo "db pass from mnt: \${DB_PASS}"
+          DB_PASS=$(cat /mnt/secrets/postgres-password)
+          echo "db pass from mnt: $DB_PASS"
           DB_NAME=postgres
           DB_HOST="postgres-postgresql.database.svc.cluster.local"
 
-          echo "🛠️ Ensuring 'timestamps' table exists...";
-          PGPASSWORD="\${DB_PASS}" psql -h "\${DB_HOST}" -U postgres -d "\${DB_NAME}" -c "CREATE TABLE IF NOT EXISTS timestamps (id SERIAL PRIMARY KEY, updated_at TIMESTAMP DEFAULT NOW());"
-
-          echo "⏳ Inserting new timestamp...";
-          PGPASSWORD="\${DB_PASS}" psql -h "\${DB_HOST}" -U postgres -d "\${DB_NAME}" -c "INSERT INTO timestamps (updated_at) VALUES (NOW());"
+          echo "⏳ Updating timestamp in PostgreSQL...";
+          PGPASSWORD="supersecretpassword" psql -h "$DB_HOST" -U postgres -d "$DB_NAME" -c "INSERT INTO timestamps (updated_at) VALUES (NOW());"
 
           echo "✅ Timestamp updated!"
           exit 0
@@ -49,15 +45,27 @@ spec:
         - name: postgres-secret-volume
           mountPath: /mnt/secrets
           readOnly: true
-"""
+'''
                 }
             }
             steps {
                 script {
                     echo "✅ Job triggered. Running timestamp update..."
+
+                    // Wait for pod completion
+                    timeout(time: 2, unit: 'MINUTES') {
+                        waitUntil {
+                            def podStatus = sh(script: "kubectl get pod timestamp-creation-job -o jsonpath='{.status.phase}'", returnStdout: true).trim()
+                            return podStatus == "Succeeded" || podStatus == "Failed"
+                        }
+                    }
+
+                    echo "🧹 Cleaning up pod..."
+                    sh "kubectl delete pod timestamp-creation-job || true"
+
+                    echo "🎉 Job completed successfully!"
                 }
             }
         }
     }
 }
-
