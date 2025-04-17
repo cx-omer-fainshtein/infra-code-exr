@@ -1,0 +1,4 @@
+ports:
+  traefik:
+    port: 9000
+    expose: true

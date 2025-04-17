@@ -6,13 +6,16 @@ controller:
     size: 10Gi
     storageClassName: "local-path"
 
+  service: ClusterIP
+
   database:
     type: "postgres"
     url: "jdbc:postgresql://postgresql.postgresql.svc.cluster.local:5432/database"
-    user: "postgres"
-    password: "superSecretPass"
-    database: "postgres-db"
+    user: "omer-test"
+    password: "omer-test"
+    database: "omer-test"
 
-  service:
-    type: ClusterIP
-
+  admin:
+    existingSecret: jenkins-admin-secret
+    userKey: jenkins-admin-user
+    passwordKey: jenkins-admin-password
