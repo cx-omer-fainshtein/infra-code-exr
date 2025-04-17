@@ -37,7 +37,9 @@ spec:
           DB_HOST="postgresql.postgresql.svc.cluster.local"
 
           echo "⏳ Updating timestamp in PostgreSQL...";
-          PGPASSWORD="t3s7l25E8I" psql -h "$DB_HOST" -U postgres -d "$DB_NAME" -c "
+          export POSTGRES_PASSWORD=$(kubectl get secret --namespace postgresql postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
+
+          PGPASSWORD="$POSTGRES_PASSWORD" psql -h "$DB_HOST" -U postgres -d "$DB_NAME" -c "
             CREATE TABLE IF NOT EXISTS timestamps (
                 id SERIAL PRIMARY KEY,
                 updated_at TIMESTAMP DEFAULT NOW()
