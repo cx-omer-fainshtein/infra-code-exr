@@ -3,17 +3,19 @@
 ## Overview
 This repository contains a DevOps exercise that automates the deployment of a Kubernetes environment using Helm and k3d. The provided deployment script simplifies the setup process on macOS, while Windows users must ensure required tools are installed manually.
 
+## Known Issues
+- jenkins job DSL need to be manually configure and manually update password as for now
+  * how to solve it? create automation job that will excute within the jenkins deployment + make sure the execute pod have kubectl on him to get the password you set on the deployment
+
+- Traefik dashboard isn't expose
+  * i check in the service - and the dashboard is enable by deafult on port 9000 - i stil can't access him and get 404
+
 ## Prerequisites
-### macOS
-
-The deployment script automatically verifies and installs required dependencies.
-
-### Windows
-Ensure the following tools are installed and available in your system's PATH:
 - `kubectl`
 - `docker`
 - `k3d`
 - `helm`
+- `terraform`
 
 ## Deployment Steps
 1. **Clone the repository:**
@@ -23,8 +25,6 @@ Ensure the following tools are installed and available in your system's PATH:
    ```
 
 2. **Run the deployment script:**
-   - **macOS:** The script will verify dependencies and proceed with the installation.
-   - **Windows:** Ensure all prerequisites are installed before proceeding.
 
    ```sh
    ./abracadabra.sh install
@@ -35,10 +35,3 @@ To remove the deployment and delete the k3d cluster, run:
 ```sh
 ./abracadabra.sh uninstall
 ```
-
-## Known Issues
-- jenkins job DSL need to be manually configure and manually update password as for now
-  * how to solve it? create automation job that will excute within the jenkins deployment + make sure the execute pod have kubectl on him to get the password you set on the deployment
-
-- Traefik dashboard isn't expose
-  * i check in the service - and the dashboard is enable by deafult on port 9000 - i stil can't access him and get 404
