@@ -1,27 +1,19 @@
 pipeline {
-    agent {
-        kubernetes {
-            inheritFrom 'worker-pod'
-            defaultContainer 'worker'
-        }
-    }
+    agent none
     triggers {
         cron('*/5 * * * *') // Run every 5 minutes
     }
     stages {
-        stage('Create Pod and Run Timestamp Update') {
-            steps {
-                script {
-                    echo "✅ Job triggered. Creating timestamp update pod..."
-
-                    // Create the pod with the mounted secret
-                    sh '''
-                    cat <<EOF | kubectl apply -f -
+        stage('Run in Worker Pod') {
+            agent {
+                kubernetes {
+                    inheritFrom 'worker-pod'
+                    defaultContainer 'worker'
+                    yaml '''
 apiVersion: v1
 kind: Pod
 metadata:
   name: timestamp-creation-job
-  namespace: postgresql
 spec:
   restartPolicy: Never
   volumes:
@@ -30,13 +22,13 @@ spec:
         secretName: postgres-secret
   containers:
     - name: worker
-      image: postgres:latest
+      image: postgres:latest  # Use the latest version
       command:
         - "/bin/sh"
         - "-c"
         - |
           echo "🔍 Checking secrets in /mnt/secrets/";
-          ls -l /mnt/secrets/
+          ls -l /mnt/secrets/  # Debugging: Print secret contents
 
           echo "📖 Reading DB credentials...";
           DB_PASS=$(cat /mnt/secrets/postgres-password)
@@ -45,27 +37,33 @@ spec:
           DB_HOST="postgresql.postgresql.svc.cluster.local"
 
           echo "⏳ Updating timestamp in PostgreSQL...";
-          PGPASSWORD="$DB_PASS" psql -h "$DB_HOST" -U postgres -d "$DB_NAME" -c "
+          PGPASSWORD="$uw8EY5hY6b" psql -h "$DB_HOST" -U postgres -d "$DB_NAME" -c "
             CREATE TABLE IF NOT EXISTS timestamps (
                 id SERIAL PRIMARY KEY,
                 updated_at TIMESTAMP DEFAULT NOW()
             );
             INSERT INTO timestamps (updated_at) VALUES (NOW());
           "
-          echo "✅ Timestamp updated!"
-EOF
-                    '''
 
-                    // Wait for pod to complete
+          echo "✅ Timestamp updated!"
+          exit 0
+'''
+                }
+            }
+            steps {
+                script {
+                    echo "✅ Job triggered. Running timestamp update..."
+
+                    // Wait for pod completion
                     timeout(time: 2, unit: 'MINUTES') {
                         waitUntil {
-                            def podStatus = sh(script: "kubectl get pod timestamp-creation-job -n postgresql -o jsonpath='{.status.phase}'", returnStdout: true).trim()
+                            def podStatus = sh(script: "kubectl get pod timestamp-creation-job -o jsonpath='{.status.phase}'", returnStdout: true).trim()
                             return podStatus == "Succeeded" || podStatus == "Failed"
                         }
                     }
 
                     echo "🧹 Cleaning up pod..."
-                    sh "kubectl delete pod timestamp-creation-job -n postgresql || true"
+                    sh "kubectl delete pod timestamp-creation-job || true"
 
                     echo "🎉 Job completed successfully!"
                 }
