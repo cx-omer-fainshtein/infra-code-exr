@@ -8,4 +8,3 @@ persistence:
 
 service:
   type: ClusterIP
-
