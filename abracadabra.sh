@@ -26,11 +26,11 @@ case "$1" in
     #read -p "Enter PostgreSQL database name: " postgres_db
 
     kubectl create namespace postgresql || true  # Ignore if already exists
-    #kubectl create secret generic postgres-secret \
-    #  --from-literal=postgres-username="$postgres_username" \
-    #  --from-literal=postgres-password="$postgres_password" \
-    #  --from-literal=postgres-db="$postgres_db" \
-    #  --namespace=postgresql
+    kubectl create secret generic postgres-secret \
+      --from-literal=postgres-username="$postgres_username" \
+      --from-literal=postgres-password="$postgres_password" \
+      --from-literal=postgres-db="$postgres_db" \
+      --namespace=postgresql
 
     echo "Kubernetes secret for PostgreSQL created successfully."
 
