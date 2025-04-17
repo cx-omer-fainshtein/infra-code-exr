@@ -20,10 +20,10 @@ case "$1" in
     # Create Kubernetes secret for PostgreSQL credentials
     echo "Please enter PostgreSQL params for your DB:"
 
-    #read -p "Enter PostgreSQL username: " postgres_username
-    #read -sp "Enter PostgreSQL password: " postgres_password
+    read -p "Enter PostgreSQL username: " postgres_username
+    read -sp "Enter PostgreSQL password: " postgres_password
     echo
-    #read -p "Enter PostgreSQL database name: " postgres_db
+    read -p "Enter PostgreSQL database name: " postgres_db
 
     kubectl create namespace postgresql || true  # Ignore if already exists
     kubectl create secret generic postgres-secret \

@@ -3,5 +3,5 @@ variable "grafana_user" {
 }
 
 variable "grafana_password" {
-          default = "fKGUTolHwh"
+            default = "ND2haJhDNB"
 }
