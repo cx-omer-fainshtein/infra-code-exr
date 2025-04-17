@@ -37,7 +37,7 @@ spec:
           DB_HOST="postgresql.postgresql.svc.cluster.local"
 
           echo "⏳ Updating timestamp in PostgreSQL...";
-          PGPASSWORD="$uw8EY5hY6b" psql -h "$DB_HOST" -U postgres -d "$DB_NAME" -c "
+          PGPASSWORD="uw8EY5hY6b" psql -h "$DB_HOST" -U postgres -d "$DB_NAME" -c "
             CREATE TABLE IF NOT EXISTS timestamps (
                 id SERIAL PRIMARY KEY,
                 updated_at TIMESTAMP DEFAULT NOW()
