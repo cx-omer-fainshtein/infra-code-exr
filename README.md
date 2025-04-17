@@ -37,7 +37,8 @@ To remove the deployment and delete the k3d cluster, run:
 ```
 
 ## Known Issues
-- jenkins DSL job finish as aborted but execute the task
-- jenkins DSL job login to postgres db hard coded 
-- jenkins ovveride grfana and vice versa - only one service can be expose at the time
-- terraform setup isn't completed
+- jenkins job DSL need to be manually configure and manually update password as for now
+  * how to solve it? create automation job that will excute within the jenkins deployment + make sure the execute pod have kubectl on him to get the password you set on the deployment
+
+- Traefik dashboard isn't expose
+  * i check in the service - and the dashboard is enable by deafult on port 9000 - i stil can't access him and get 404
