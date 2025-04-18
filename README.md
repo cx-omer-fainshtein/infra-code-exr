@@ -24,7 +24,13 @@ This repository contains a DevOps exercise that automates the deployment of a Ku
    cd infra-code-exr
    ```
 
-2. **Run the deployment script:**
+2. **Edit /etc/hosts file:**
+   add this lines into your /etc/hosts file:
+   ```sh
+   127.0.0.1 grafana.localhost jenkins.localhost traefik.localhost
+   ```
+  
+3. **Run the deployment script:**
 
    ```sh
    ./abracadabra.sh install
