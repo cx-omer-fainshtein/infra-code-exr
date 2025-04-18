@@ -17,7 +17,7 @@ case "$1" in
     echo "Exposing Traefik dashboard via Ingress..."
     kubectl apply -f ./helm/traefik/traefik-dashboard-ingress.yaml
 
-    # Create Kubernetes secret for PostgreSQL credentials
+    # Create interactive Kubernetes secret for PostgreSQL credentials
     echo "Please enter PostgreSQL params for your DB:"
 
     read -p "Enter PostgreSQL username: " postgres_username
@@ -34,7 +34,7 @@ case "$1" in
 
     echo "Kubernetes secret for PostgreSQL created successfully."
 
-    # Step 4: Deploy PostgreSQL with Helm
+    # Deploy PostgreSQL with Helm
     echo "Deploying PostgreSQL..."
     helm repo add bitnami https://charts.bitnami.com/bitnami || true
     helm repo update
@@ -42,19 +42,19 @@ case "$1" in
 
     kubectl create namespace jenkins || true # ignore if already exist
 
-    # Step 5: Deploy Jenkins with Helm
+    # create jenkins k8s secret
     echo "Creating Jenkins admin secret..."
     kubectl create secret generic jenkins-admin-secret \
       --from-literal=jenkins-admin-user=admin \
       --from-literal=jenkins-admin-password=goodPassword \
       --namespace=jenkins
 
-    # Step 6: Deploy Jenkins with Helm
+    # Deploy Jenkins with Helm
     echo "Deploying Jenkins..."
     helm install jenkins jenkinsci/jenkins --namespace jenkins --values ./helm/jenkins/jenkins-values.yaml
     kubectl apply -f ./helm/jenkins/jenkins-ingress.yaml
 
-    # Step 7: Deploy Grafana with Helm
+    # Deploy Grafana with Helm
     kubectl create namespace grafana || true
     echo "Deploying Grafana..."
     helm install grafana bitnami/grafana --namespace grafana --values ./helm/grafana/values.yaml
